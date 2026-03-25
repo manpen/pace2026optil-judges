@@ -1,0 +1,14 @@
+[package]
+name = "pace2026judge"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pace26checker = { git = "https://github.com/manpen/pace26checker.git", version = "0.1.0", features = ["with_digest"] }
+pace26remote = { git = "https://github.com/manpen/pace26remote.git", version = "0.1.0" }
+reqwest = { version = "0.13.2", features = ["blocking", "json", "rustls"],  default-features = false }
+
+[profile.release]
+debug = false
+panic = "abort"
+lto = "fat"

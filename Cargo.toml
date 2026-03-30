@@ -10,5 +10,6 @@ reqwest = { version = "0.13.2", features = ["blocking", "json", "rustls"],  defa
 
 [profile.release]
 debug = false
+strip = true
 panic = "abort"
 lto = "fat"

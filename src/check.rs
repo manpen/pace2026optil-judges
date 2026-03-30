@@ -17,21 +17,21 @@ macro_rules! println_exit {
     };
 }
 
-fn upload_solution_and_get_best_known(jd: JobDescription) -> u32 {
+fn upload_solution_and_get_best_known(jd: JobDescription) -> Option<u32> {
     let to_server = TransferToServer { jobs: vec![jd] };
     let client = reqwest::blocking::Client::new();
     let response: TransferFromServer = client
         .post("https://pace2026.imada.sdu.dk/api/solution")
         .json(&to_server)
         .send()
-        .expect("Internal error -- STRIDE server error")
+        .ok()?
         .json()
-        .expect("Internal error -- STRIDE response error");
+        .ok()?;
 
-    *response
+    response
         .best_scores
         .get(&to_server.jobs[0].idigest)
-        .expect("Internal error -- STRIDE job missing")
+        .copied()
 }
 
 pub struct CheckResult {
@@ -66,7 +66,7 @@ pub fn check_user_solution(args: &Args) -> CheckResult {
             let own_score = trees.len() as u32;
             let jd = JobDescription::valid(idigest, trees, None);
             let server_score = upload_solution_and_get_best_known(jd);
-            let best_known = server_score.min(own_score);
+            let best_known = server_score.unwrap_or(u32::MAX).min(own_score);
 
             CheckResult {
                 own_score,

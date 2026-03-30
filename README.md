@@ -8,5 +8,6 @@ The binaries (`exact`, `tiny`, `heuristic`, `lower`) are placed in `target/x86_6
 # Scores
 Depending on the track, the judges output different scores:
 - Tiny: solution size (int)
-- Exact: runtime in seconds (float)
-- Heuristic: scoring function sketched on pace website
+- Exact: solution size
+- Heuristic: solution size
+- LowerBound: runtime (in ms)

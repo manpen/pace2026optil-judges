@@ -21,7 +21,7 @@ mod exact {
             2500,
         );
         assert!(success);
-        assert!(stdout.contains("2.5|SUCCESS"));
+        assert!(stdout.contains("4|SUCCESS"));
     }
 
     #[test]
@@ -33,8 +33,7 @@ mod exact {
             2,
         );
         assert!(success);
-        assert!(!stdout.contains("|SUCCESS"));
-        assert!(stdout.contains("|Suboptimal"));
+        assert!(stdout.contains("5|SUCCESS"));
     }
 
     #[test]
@@ -79,6 +78,7 @@ mod exact {
 
 mod heuristic {
     use super::*;
+    use std::path::PathBuf;
 
     fn bin() -> PathBuf {
         PathBuf::from(env!("CARGO_BIN_EXE_heuristic"))
@@ -92,10 +92,10 @@ mod heuristic {
             &bin(),
             &testcase_path("tiny01/instance.nw"),
             &testcase_path("tiny01/opt.sol"),
-            2,
+            2500,
         );
         assert!(success);
-        assert!(stdout.contains("1|SUCCESS"));
+        assert!(stdout.contains("4|SUCCESS"));
     }
 
     #[test]
@@ -107,7 +107,81 @@ mod heuristic {
             2,
         );
         assert!(success);
-        assert!(stdout.contains("0.25|SUCCESS"));
+        assert!(stdout.contains("5|SUCCESS"));
+    }
+
+    #[test]
+    fn test_syntax() {
+        let (success, stdout, _stderr) = run_binary(
+            &bin(),
+            &testcase_path("tiny01/instance.nw"),
+            &testcase_path("tiny01/syntax_error.sol"),
+            2,
+        );
+        assert!(success);
+        assert!(!stdout.contains("|SUCCESS"));
+        //assert!(stdout.contains("syntax")); TODO: pace26checker does not emit a syntax error yet
+    }
+
+    #[test]
+    fn test_empty() {
+        let (success, stdout, _stderr) = run_binary(
+            &bin(),
+            &testcase_path("tiny01/instance.nw"),
+            &testcase_path("tiny01/empty.sol"),
+            2,
+        );
+        assert!(success);
+        assert!(!stdout.contains("|SUCCESS"));
+        assert!(stdout.contains("Empty"));
+    }
+
+    #[test]
+    fn test_infeasible() {
+        let (success, stdout, _stderr) = run_binary(
+            &bin(),
+            &testcase_path("tiny01/instance.nw"),
+            &testcase_path("tiny01/infeasible.sol"),
+            2,
+        );
+        assert!(success);
+        assert!(!stdout.contains("|SUCCESS"));
+        assert!(stdout.contains("Found only"));
+    }
+}
+
+mod lower_bound {
+    use super::*;
+    use std::path::PathBuf;
+
+    fn bin() -> PathBuf {
+        PathBuf::from(env!("CARGO_BIN_EXE_lower_bound"))
+            .canonicalize()
+            .unwrap()
+    }
+
+    #[test]
+    fn test_ok() {
+        let (success, stdout, _stderr) = run_binary(
+            &bin(),
+            &testcase_path("tiny01/instance.nw"),
+            &testcase_path("tiny01/opt.sol"),
+            2500,
+        );
+        assert!(success);
+        assert!(stdout.contains("2500|SUCCESS"));
+    }
+
+    #[test]
+    fn test_subopt() {
+        let (success, stdout, _stderr) = run_binary(
+            &bin(),
+            &testcase_path("tiny01/instance.nw"),
+            &testcase_path("tiny01/subopt.sol"),
+            2,
+        );
+        assert!(success);
+        assert!(stdout.contains("2|SUCCESS"));
     }
 
     #[test]

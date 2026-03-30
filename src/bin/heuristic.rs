@@ -1,6 +1,7 @@
 use pace2026judge::check::check_user_solution;
 use pace2026judge::optil_args::Args;
 
+#[allow(dead_code)]
 pub fn compute_pace_heuristic_score(
     solver_score: usize,
     best_known: usize,
@@ -18,10 +19,5 @@ pub fn compute_pace_heuristic_score(
 fn main() {
     let args = Args::from_args();
     let result = check_user_solution(&args);
-    let pace_score = compute_pace_heuristic_score(
-        result.own_score as usize,
-        result.best_known as usize,
-        result.num_leaves as usize,
-    );
-    println!("{pace_score}|SUCCESS");
+    println!("{}|SUCCESS", result.own_score);
 }

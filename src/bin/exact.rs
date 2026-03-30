@@ -6,7 +6,7 @@ fn main() {
     let result = check_user_solution(&args);
 
     if result.own_score == result.best_known {
-        println!("{}|SUCCESS", args.user_time as f64 / 1000.0);
+        println!("{}|SUCCESS", args.user_time / 1000.0);
     } else {
         println!(
             "3|Suboptimal solution. Best publicly known {}. Got {}",

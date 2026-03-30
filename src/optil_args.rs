@@ -5,8 +5,8 @@ pub struct Args {
     pub instance_input: PathBuf,
     pub reference_output: PathBuf,
     pub user_output: PathBuf,
-    pub user_time: u64,
-    pub perf_time: u64,
+    pub user_time: f64,
+    pub perf_time: f64,
 }
 
 impl Args {
@@ -17,8 +17,8 @@ impl Args {
         let instance_input = PathBuf::from(&args[0]);
         let user_output = PathBuf::from(&args[1]);
         let reference_output = PathBuf::from(&args[2]);
-        let user_time = u64::from_str(&args[3]).expect("failed to parse time");
-        let perf_time = u64::from_str(&args[4]).expect("failed to parse time");
+        let user_time = f64::from_str(&args[3]).ok().unwrap_or(f64::NAN);
+        let perf_time = f64::from_str(&args[4]).ok().unwrap_or(f64::NAN);
 
         assert!(instance_input.is_file());
         assert!(user_output.is_file());
